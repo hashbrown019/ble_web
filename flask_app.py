@@ -21,7 +21,7 @@ def admin():
 
 def ls_ble():
     res = []
-    dir_path = "assets\\"
+    dir_path = "assets/"
     # Iterate directory
     for path in os.listdir(dir_path):
         # check if current path is a file
