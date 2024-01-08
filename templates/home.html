@@ -57,6 +57,25 @@
 				height: 80%;
 				width: 100vw;
 			}
+			.view-button {
+	     		background: #fff;
+				border-radius: 4px;
+				border: none;
+				box-sizing: border-box;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+				color: rgba(0, 0, 0, 0.8);
+				display: block;
+				font-family: Futura, Helvetica Neue, sans-serif;
+				font-size: 12px;
+				font-weight: 700;
+				max-width: 128px;
+				overflow-wrap: break-word;
+				padding: 0.5em 1em;
+				position: absolute;
+				width: max-content;
+				height: max-content;
+				transform: translate3d(-50%, -50%, 0);
+		    }
 
 			/* This styles the aside container */
 /*            #aSide {
@@ -81,7 +100,6 @@
 		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
 	</head>
 	<body>
-		asdadsddadsad
 		<header class="x-header x-light-grey">
 			<div class="x-container">
 				<img onclick="stop_all_scan()" src="https://crisnotbrown.pythonanywhere.com/static/_test_/img/barcode-scan.gif" class="x-img x-left" style="max-width: 20%;"><br>
@@ -119,26 +137,60 @@
 			<br>
 			<br>
 			<div class="x-row">
-				<span class="x-padding x-round-large x-border x-border-Green x-hover-black" onclick="change_view('map')">
-					Flat Map Mode
-				</span>
-				<span class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="change_view('3dmode')">
-					3D view Mode
-				</span>
+			<div class="x-row">
+				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(1)">
+					1st Floor
+				</button>
+				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(2)">
+					2nd Floor
+				</button>
+				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(3)">
+					3rd Floor
+				</button>
+				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(4)">
+					4th Floor
+				</button>
+			</div>
 			</div>
 		</div>
 		<br>
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
 		<model-viewer 
-			id = "3dmode"
-			class ="x-border-red view"
+			id = "floor_plan"
+			class ="x-border-red view x-border"
 			src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
 			alt="FSUU main Campus"
 			camera-controls
-			auto-rotate
-			ar ios-src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
-			style ="width: 100vw; display: none;height: 95%;"
+			camera-orbit="0deg 0deg 0m"
+
+			style ="width: 100vw;height: 95%;"
 			>
+
+			{% set count=1%}
+			{% for bec in beacons %}
+				<button 
+					class="view-button floors floor_{{bec['f_floor']}} x-red" 
+					slot="hotspot-{{ loop.index }}"
+					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}">
+					{{bec['f_name']}}
+				</button>
+			{% endfor %}
 		</model-viewer>
+		<<!-- button class="view-button" slot="hotspot-1" data-position="-1m 1m 1m" data-normal="1m 1m 1m" data-orbit="90deg 92 1m" data-target="2m 2m 2m">
+			Hold Tight!
+		</button> -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
 		<div class="x-round-xxlarge view" style="height: 95%;display: none;" id="map"></div>
 		<hr>
 		<div class="x-row x-container">
@@ -164,7 +216,6 @@
 		<script type="text/javascript">
 			var coords = []
 			var map = L.map('map',{
-
 					    minZoom: 15,
 					    maxZoom: 50
 			});
@@ -179,8 +230,56 @@
 			function onDeviceReady() {
 				get_loccation(function(corrds){})
 				check_if_availble()
-				change_view('3dmode')
+				change_view('floor_plan')
+
 			}
+
+			// =========================================================================
+			var FLOOR = $ID("floor_plan")
+			FLOOR.addEventListener("click", (event) => {
+				const x = event.clientX;
+				const y = event.clientY;
+				const result = FLOOR.positionAndNormalFromPoint(x, y);
+				if (result) {
+					const { point, normal } = result;
+					println(result)
+				}
+			});
+			// ===================================================================
+			// ===================================================================
+			// const FLOOR = document.querySelector("#floor_plan");
+			const annotationClicked = (annotation) => {
+				let dataset = annotation;
+				println(dataset)
+				FLOOR.cameraTarget = dataset.target;
+				FLOOR.cameraOrbit = dataset.orbit;
+				FLOOR.fieldOfView = '45deg';
+			}
+
+			FLOOR.querySelectorAll('button').forEach((hotspot) => {
+				hotspot.addEventListener('click', () => annotationClicked(hotspot));
+			});
+			// =====================================================================
+			// =====================================================================
+
+			function ch_floor(floor){
+				println("floor = "+floor)
+				FLOOR_SEL = floor
+				$ID("floor_plan").src = "https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/"+floor+".glb"
+				ch_floor_deac(floor)
+			}
+
+			function ch_floor_deac(floor){
+				var views = $CLASS("floors")
+				for (var i = 0; i < views.length; i++) {
+					views[i].style.display = "none"
+				}
+				var views = $CLASS("floor_"+floor)
+				for (var i = 0; i < views.length; i++) {
+					views[i].style.display = "block"
+				}
+			}
+			ch_floor(1)
 
 			function get_loccation(func){
 				navigator.geolocation.getCurrentPosition(function(position) {

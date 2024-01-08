@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one
+	or more contributor license agreements.  See the NOTICE file
+	distributed with this work for additional information
+	regarding copyright ownership.  The ASF licenses this file
+	to you under the Apache License, Version 2.0 (the
+	"License"); you may not use this file except in compliance
+	with the License.  You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing,
+	software distributed under the License is distributed on an
+	"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	 KIND, either express or implied.  See the License for the
+	specific language governing permissions and limitations
+	under the License.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!--
+		Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+			https://cordova.apache.org/docs/en/latest/
+		Some notes:
+			* https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+			* Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+				* Enable inline JS: add 'unsafe-inline' to default-src
+		-->
+		<meta name="format-detection" content="telephone=no">
+		<!-- <meta http-equiv="Content-Security-Policy" content="img-src * data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"> -->
+		<meta name="msapplication-tap-highlight" content="no">
+		<!-- <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover"> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+		<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+		<!-- <meta name="color-scheme" content="light dark"> -->
+		<!-- <link rel="stylesheet" href="css/index.css"> -->
+		<link rel="stylesheet" href="https://crisnotbrown.pythonanywhere.com/static/_test_/css/x.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+		crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+		crossorigin=""></script>
+		<title>Hello World</title>
+		<style type="text/css">
+			body {
+				padding: 0;
+				margin: 5px;
+			}
+			html, body, #map {
+				height: 80%;
+				width: 100vw;
+			}
+			.view-button {
+	     		background: #fff;
+				border-radius: 4px;
+				border: none;
+				box-sizing: border-box;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+				color: rgba(0, 0, 0, 0.8);
+				display: block;
+				font-family: Futura, Helvetica Neue, sans-serif;
+				font-size: 12px;
+				font-weight: 700;
+				max-width: 128px;
+				overflow-wrap: break-word;
+				padding: 0.5em 1em;
+				position: absolute;
+				width: max-content;
+				height: max-content;
+				transform: translate3d(-50%, -50%, 0);
+		    }
+
+			/* This styles the aside container */
+/*            #aSide {
+				height: 600px;
+				width: 600px;
+				position: absolute;
+				top: calc(50% - 250px);
+				right: 7%;
+			}
+
+			/* This styles the 3D object inserted in the aside container */
+/*            #aSide model-viewer {
+				height: 600px;
+				width: 100vw;
+				position: absolute;
+				top: 0;
+				left: 0;
+				border: none;
+			}*/
+		</style>
+		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+	</head>
+	<body>
+		<h1>Admin Panel</h1>
+		<hr>
+
+		<div class="x-container">
+			<b>Map Modes</b><br>
+			<span class="x-text-grey x-tiny">Select map mode is to switch from natiove flat map to 3D</span>
+			<br>
+			<br>
+			<div class="x-row">
+				<span class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(1)">
+					1st Floor
+				</span>
+				<span class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(2)">
+					2nd Floor
+				</span>
+				<span class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(3)">
+					3rd Floor
+				</span>
+				<span class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(4)">
+					4th Floor
+				</span>
+			</div>
+			<hr>
+			<div class="x-row">
+				<span>Select Registered Beacon to DELETE</span>
+				<select class="x-input x-btn" style="width:40vw" onchange="del_beac(this.value)">
+					<option selected disabled>Please select in the list</option>
+					{% for bec in beacons %}
+						
+						<option value="{{bec['f_code']}} ">
+							<b>F{{bec['f_floor']}}</b> |
+							<b>{{bec['f_name']}}</b><br> | 
+							<i>{{bec['f_description']}}</i>
+						</option>
+				{% endfor %}
+				</select>
+			</div>
+		</div>
+		<br>
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<div class="x-container x-padding x-center">			
+			<model-viewer 
+				id = "floor_plan1"
+				class ="x-border-red view x-border"
+				src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
+				alt="FSUU main Campus"
+				camera-controls
+				camera-orbit="0deg 0deg 0m"
+				style ="width: 100%;height: 80vh;"
+				>
+				{% set count=1%}
+				{% for bec in beacons %}
+					<button 
+						class="view-button floors floor_{{bec['f_floor']}} x-red x-tiny" 
+						slot="hotspot-{{ loop.index }}"
+						data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}">
+						<b>{{bec['f_name']}}</b><br>
+						<i>{{bec['f_description']}}</i>
+					</button>
+				{% endfor %}
+			</model-viewer>
+		</div>
+		<!-- button class="view-button" slot="hotspot-1" data-position="-1m 1m 1m" data-normal="1m 1m 1m" data-orbit="90deg 92 1m" data-target="2m 2m 2m">
+			Hold Tight!
+		</button> -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<!-- ========================================================== -->
+		<div class="x-round-xxlarge view" style="height: 95%;display: none;" id="map"></div>
+		<hr>
+		<div class="x-row x-container">
+			<b>Output Logs</b><br>
+			<span class="x-text-grey x-tiny">View Data logs that has been retrieve and gather and error/warning logs</span>
+			<div class="x-row">
+				<b class="x-text-grey">Data Log</b><br>
+				<span id="data_blelogs" class="x-text-grey x-tiny"></span>
+				<hr>
+				<b class="x-text-grey">Error Log</b><br>
+				<span class="x-text-grey x-tiny" id="error_"></span>
+				<hr>
+				<b class="x-text-grey">Console Log</b><br>
+				<span class="x-text-grey x-tiny" id="activity_log"></span>
+			</div>        	
+		</div>
+		<br><br><br>
+		<!-- ======================================================= -->
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/Brorn.min.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/cordova.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/trilateration.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/index.js"></script>
+		<script type="text/javascript">
+			let DOMAIN = "http://127.0.0.1:5000"
+			// let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
+			var coords = []
+			let add_beac = undefined
+			let FLOOR_SEL = 1
+			var map = L.map('map',{
+					    minZoom: 15,
+					    maxZoom: 50
+			});
+			// var map = L.map('map').setView([8.947894,125.5418056], 21);
+			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: 'BLE Scanner | FSUU'
+			}).addTo(map);
+
+			$ID('map').querySelectorAll("a")[2].style.display="none"
+
+			document.addEventListener('deviceready', onDeviceReady, false);
+			function onDeviceReady() {
+				get_loccation(function(corrds){})
+				check_if_availble()
+
+			}
+
+
+
+			// =========================================================================
+
+			function del_beac(vals){
+				$send({
+					action : DOMAIN+"/del_ble/"+vals,
+					mdethod : POST,
+					func : function(res){
+						println(res)
+						location.reload()
+					},
+					err_dialog : true
+				})
+				println(vals)
+				// location.reload()
+
+			}
+
+			var FLOOR = $ID("floor_plan1")
+			FLOOR.addEventListener("click", (event) => {
+				const x = event.clientX;
+				const y = event.clientY;
+				const result = FLOOR.positionAndNormalFromPoint(x, y);
+				if (result) {
+					var code = gen_code(14)
+					const { point, normal } = result;
+					println(result)
+					add_beac = $dialog({
+						title : "Set BLE Beacon record for FLoor : 1",
+						content:(`
+							<input disabled class="f_data x-hide" id="f_code" type="text" value='`+code+`''><br>
+							<span>floor</span><br>
+							<input disabled class="f_data" id="f_floor" type="text" value='`+FLOOR_SEL+`''><br>
+							<span>Name</span><br>
+							<input class="f_data" id="f_name" type="text"><br>
+							<span>description</span><br>
+							<input class="f_data" id="f_description" type="text"><br>
+							<span>serial</span><br>
+							<input class="f_data" id="f_serial" type="text"><br>
+							<span>data</span><br>
+							<input class="f_data" id="f_x" type="text" disabled value='`+result.position.x+`'>
+							<input class="f_data" id="f_y" type="text" disabled value='`+result.position.y+`'>
+							<input class="f_data" id="f_z" type="text" disabled value='`+result.position.z+`'>
+						`),
+						buttons :["save","cancel"],
+						buttons_actions : [function(){
+							var data_ = input_to_json("f_data")
+							println(data_)
+							$send({
+								action : DOMAIN+"/save_ble",
+								mdethod : POST,
+								data : $DATA(data_),
+								func : function(res){
+									println(res)
+									location.reload()
+								},
+								err_dialog : true
+							})
+						}]
+					})
+					add_beac.show()
+				}
+			});
+			// ===================================================================
+			// ===================================================================
+			// const FLOOR = document.querySelector("#floor_plan1");
+			const annotationClicked = (annotation) => {
+				let dataset = annotation;
+				println(dataset)
+				FLOOR.cameraTarget = dataset.target;
+				FLOOR.cameraOrbit = dataset.orbit;
+				FLOOR.fieldOfView = '45deg';
+				add_beac.destroy()
+				// add_beac.destroy()
+			}
+
+			FLOOR.querySelectorAll('button').forEach((hotspot) => {
+				hotspot.addEventListener('hover', () => annotationClicked(hotspot));
+			});
+			// =====================================================================
+			// =====================================================================
+
+			function ch_floor(floor){
+				println("floor = "+floor)
+				FLOOR_SEL = floor
+				$ID("floor_plan1").src = "https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/"+floor+".glb"
+				ch_floor_deac(floor)
+			}
+
+			function ch_floor_deac(floor){
+				var views = $CLASS("floors")
+				for (var i = 0; i < views.length; i++) {
+					views[i].style.display = "none"
+				}
+				var views = $CLASS("floor_"+floor)
+				for (var i = 0; i < views.length; i++) {
+					views[i].style.display = "block"
+				}
+			}
+			ch_floor(1)
+		</script>
+	</body>
+</html>
+
