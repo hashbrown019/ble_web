@@ -96,12 +96,12 @@
 			<span class="x-text-grey">Discovered Devices will appear on the map with approx 10 meters in range</span>
 			<br>
 			<div class="x-container">
-				<span class="x-padding x-round-large x-border x-border-green" onclick="refresh()">
+				<!-- <span class="x-padding x-round-large x-border x-border-green" onclick="refresh()">
 					Rescan <span class="fa fa-refresh"></span>
 				</span>
 				<span class="x-padding x-round-large x-border x-border-red" onclick="stop_all_scan()">
 					Stop Scan and reveal beacon places <span class="fa fa-refresh"></span>
-				</span>
+				</span> -->
 				<!-- <span class="x-right x-padding x-round-large x-border x-border-orange">Or use native <b onclick="ble_2()">BLE Scanner</b></span> -->
 			</div>
 		</div>
@@ -131,11 +131,11 @@
 		<model-viewer 
 			id = "3dmode"
 			class ="x-border-red view"
-			src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/new.glb"
+			src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
 			alt="FSUU main Campus"
 			camera-controls
 			auto-rotate
-			ar ios-src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/new.glb"
+			ar ios-src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
 			style ="width: 100vw; display: none;height: 95%;"
 			>
 		</model-viewer>
@@ -179,6 +179,7 @@
 			function onDeviceReady() {
 				get_loccation(function(corrds){})
 				check_if_availble()
+				change_view('3dmode')
 			}
 
 			function get_loccation(func){
