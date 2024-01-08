@@ -21,12 +21,12 @@ def admin():
 
 def ls_ble():
     res = []
-    dir_path = "/home/crisnotbrown/mysite/assets/"
+    dir_path = "/home/crisnotbrown/mysite/assets"
     # Iterate directory
     for path in os.listdir(dir_path):
         # check if current path is a file
         if os.path.isfile(os.path.join(dir_path, path)):
-            f = open(f"/home/crisnotbrown/mysite/assets/{path}","r")
+            f = open(f"/home/crisnotbrown/mysite/assets{path}","r")
             res.append(json.loads(f.read()))
             f.close()
     return(res)
@@ -34,12 +34,12 @@ def ls_ble():
 @app.route('/save_ble',methods=["POST","GET"])
 def save_ble():
     codes = request.form['f_code']
-    f = open(f"/home/crisnotbrown/mysite/assets/{codes}","w")
+    f = open(f"/home/crisnotbrown/mysite/assets{codes}","w")
     f.write(json.dumps(dict(request.form)))
     return "finished"
 
 @app.route('/del_ble/<code>',methods=["POST","GET"])
 def del_ble(code):
-    os.remove("/home/crisnotbrown/mysite/assets/"+code)
+    os.remove("/home/crisnotbrown/mysite/assets"+code)
     return "finished"
     # heheh
