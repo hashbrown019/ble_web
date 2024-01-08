@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one
+	or more contributor license agreements.  See the NOTICE file
+	distributed with this work for additional information
+	regarding copyright ownership.  The ASF licenses this file
+	to you under the Apache License, Version 2.0 (the
+	"License"); you may not use this file except in compliance
+	with the License.  You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing,
+	software distributed under the License is distributed on an
+	"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	 KIND, either express or implied.  See the License for the
+	specific language governing permissions and limitations
+	under the License.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!--
+		Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+			https://cordova.apache.org/docs/en/latest/
+		Some notes:
+			* https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+			* Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+				* Enable inline JS: add 'unsafe-inline' to default-src
+		-->
+		<meta name="format-detection" content="telephone=no">
+		<!-- <meta http-equiv="Content-Security-Policy" content="img-src * data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"> -->
+		<meta name="msapplication-tap-highlight" content="no">
+		<!-- <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover"> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+		<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+		<!-- <meta name="color-scheme" content="light dark"> -->
+		<!-- <link rel="stylesheet" href="css/index.css"> -->
+		<link rel="stylesheet" href="../../static/_test_/css/x.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+		crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+		crossorigin=""></script>
+		<title>Hello World</title>
+		<style type="text/css">
+			body {
+				padding: 0;
+				margin: 0;
+			}
+			html, body, #map {
+				height: 80%;
+				width: 100vw;
+			}
+
+			/* This styles the aside container */
+/*            #aSide {
+				height: 600px;
+				width: 600px;
+				position: absolute;
+				top: calc(50% - 250px);
+				right: 7%;
+			}
+
+			/* This styles the 3D object inserted in the aside container */
+/*            #aSide model-viewer {
+				height: 600px;
+				width: 100vw;
+				position: absolute;
+				top: 0;
+				left: 0;
+				border: none;
+			}*/
+		</style>
+		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+	</head>
+	<body>
+		asdadsddadsad
+		<header class="x-header x-light-grey">
+			<div class="x-container">
+				<img onclick="stop_all_scan()" src="../../static/_test_/img/barcode-scan.gif" class="x-img x-left" style="max-width: 20%;"><br>
+				<div class="x-container x-right">
+					<b class="x-large x-text-orange">
+						BLE Beacon Scanner
+					</b>
+				</div>
+			</div>
+		</header>
+		<div class="x-container x-padding ">
+			<span class="x-text-grey">Discovered Devices will appear on the map with approx 10 meters in range</span>
+			<br>
+			<div class="x-container">
+				<span class="x-padding x-round-large x-border x-border-green" onclick="refresh()">
+					Rescan <span class="fa fa-refresh"></span>
+				</span>
+				<span class="x-padding x-round-large x-border x-border-red" onclick="stop_all_scan()">
+					Stop Scan and reveal beacon places <span class="fa fa-refresh"></span>
+				</span>
+				<!-- <span class="x-right x-padding x-round-large x-border x-border-orange">Or use native <b onclick="ble_2()">BLE Scanner</b></span> -->
+			</div>
+		</div>
+		<div class="x-container x-row">
+			<span>BLE device Status : </span>
+			<span id="status" class="x-center x-animate-fadingv fa fa-fading x-text-grey">Scanning</span><br>
+			<span>Scanned Devices : </span><br>
+			<span id="data_ble" class="x-tiny" style="overflow-y:scroll;height: 50vh;"></span>
+		</div>
+		<hr>
+
+		<div class="x-container">
+			<b>Map Modes</b><br>
+			<span class="x-text-grey x-tiny">Select map mode is to switch from natiove flat map to 3D</span>
+			<br>
+			<br>
+			<div class="x-row">
+				<span class="x-padding x-round-large x-border x-border-Green x-hover-black" onclick="change_view('map')">
+					Flat Map Mode
+				</span>
+				<span class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="change_view('3dmode')">
+					3D view Mode
+				</span>
+			</div>
+		</div>
+		<br>
+		<model-viewer 
+			id = "3dmode"
+			class ="x-border-red view"
+			src="../../static/_test_/assets/new.glb"
+			alt="FSUU main Campus"
+			camera-controls
+			auto-rotate
+			ar ios-src="../../static/_test_/assets/new.glb"
+			style ="width: 100vw; display: none;height: 95%;"
+			>
+		</model-viewer>
+		<div class="x-round-xxlarge view" style="height: 95%;display: none;" id="map"></div>
+		<hr>
+		<div class="x-row x-container">
+			<b>Output Logs</b><br>
+			<span class="x-text-grey x-tiny">View Data logs that has been retrieve and gather and error/warning logs</span>
+			<div class="x-row">
+				<b class="x-text-grey">Data Log</b><br>
+				<span id="data_blelogs" class="x-text-grey x-tiny"></span>
+				<hr>
+				<b class="x-text-grey">Error Log</b><br>
+				<span class="x-text-grey x-tiny" id="error_"></span>
+				<hr>
+				<b class="x-text-grey">Console Log</b><br>
+				<span class="x-text-grey x-tiny" id="activity_log"></span>
+			</div>        	
+		</div>
+		<br><br><br>
+		<!-- ======================================================= -->
+		<script src="../../static/_test_/js/Brorn.min.js"></script>
+		<script src="../../static/_test_/cordova.js"></script>
+		<script src="../../static/_test_/js/trilateration.js"></script>
+		<script src="../../static/_test_/js/index.js"></script>
+		<script type="text/javascript">
+			var coords = []
+			var map = L.map('map',{
+
+					    minZoom: 15,
+					    maxZoom: 50
+			});
+			// var map = L.map('map').setView([8.947894,125.5418056], 21);
+			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: 'BLE Scanner | FSUU'
+			}).addTo(map);
+
+			$ID('map').querySelectorAll("a")[2].style.display="none"
+
+			document.addEventListener('deviceready', onDeviceReady, false);
+			function onDeviceReady() {
+				get_loccation(function(corrds){})
+				check_if_availble()
+			}
+
+			function get_loccation(func){
+				navigator.geolocation.getCurrentPosition(function(position) {
+						var location ={
+							'latlng':[position.coords.latitude,position.coords.longitude],
+							'Latitude':position.coords.latitude,
+							'Longitude':position.coords.longitude,
+							'Altitude':position.coords.altitude,
+							'Accuracy':position.coords.accuracy,
+							'Altitude Accuracy':position.coords.altitudeAccuracy  ,
+							'Heading':position.coords.heading,
+							'Speed':position.coords.speed,
+							'Timestamp':position.timestamp}
+							println("setView")
+							$ID("activity_log").innerHTML = $ID("activity_log").innerHTML + "Location found in : "+JSON.stringify([position.coords.latitude,position.coords.longitude]) +"<br>"
+
+							map.setView([position.coords.latitude,position.coords.longitude], 21);
+							L.marker([position.coords.latitude,position.coords.longitude]).addTo(map)
+
+							func([position.coords.latitude,position.coords.longitude])
+							println(location)
+
+					},function (error) {
+						alert('code: '    + error.code    + '\n' +
+							  'message: ' + error.message + '\n');
+					});
+			}
+
+			function check_if_availble(){
+				ble.isEnabled(
+					function() {
+						$ID("status").innerHTML =("<span class='x-text-green'>Bluetooth is enabled</span>");
+						ble_1()
+					},
+					function() {$ID("status").innerHTML =("<span class='x-text-red'>Bluetooth is *not* enabled</span>"); }
+				);
+			}
+
+			function change_view(view){
+				var views = $CLASS("view")
+				for (var i = 0; i < views.length; i++) {
+					views[i].style.display = "none"
+				}
+				$ID(view).style.display = "block"
+			}
+
+
+			function stop_all_scan(){
+				$ID("data_ble").innerHTML ="<b class='x-text-yellow x-large'>Please Wait while we stop the current scan</b>"
+				setTimeout(ble.stopScan,
+					5000,
+					function() { $ID("data_ble").innerHTML = ("<span class='x-text-green'>Stop Scan complete</span>"); },
+					function() { $ID("data_ble").innerHTML = ("<span class='x-text-red'>stopScan failed</span>"); }
+				);
+				$ID("data_ble").innerHTML = ("Stop Scan complete");
+				get_coords()
+				// $ID('data_blelogs').innerHTML = JSON.stringify(coords)
+			}
+
+			function refresh(){
+				if (map != undefined) { map.remove(); }
+				else{
+					map = L.map('map',{
+
+					    minZoom: 15,
+					    maxZoom: 50
+					});
+						// var map = L.map('map').setView([8.947894,125.5418056], 21);
+						L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+						attribution: 'BLE Scanner | FSUU'
+					}).addTo(map);
+				}
+				coords = []
+				$ID("error_").innerHTML = ""
+				$ID("activity_log").innerHTML = ""
+				check_if_availble()
+				$ID("data_ble").innerHTML = "<b class='x-text-yellow x-large'>Re-scanning, please wait</b>"
+				ble_1()
+			}
+
+
+			
+			function ble_1(){
+				$ID("data_ble").innerHTML = "Scanning Using BLE Bluetooth"
+				$ID('data_blelogs').innerHTML = "Logging"
+				try{
+					ble.scan([],3, function(device) {
+						// $ID("data_ble").innerHTML = JSON.stringify(device)
+						coords.push({"id":device['id'],"distance" : getDistance(device['rssi']).toFixed(2)})
+						$ID("data_ble").innerHTML = $ID("data_ble").innerHTML + card_create_single(device)
+						dom_refresh()
+					}, function(){
+						$ID("data_ble").innerHTML = "<b class='x-text-red x-large'>Failed in Scanning using <i></i></b>"
+					});
+				}catch(e){
+					$ID("data_ble").innerHTML = "<b class='x-text-red x-large'>An error has been detecting while scanning<i></i></b>"
+					$ID('data_blelogs').innerText = e
+				}
+			}
+
+			function getDistance(rssi){
+				let n=2;let mp=-69
+				return 10 ** ((mp - (rssi))/(10 * n))
+			}
+
+			function get_coords(){
+				for (var i = 0; i < coords.length; i++) {
+					try{
+						var distances_ = [
+							coords[i+2]['distance'].toFixed(2),
+							coords[i+1]['distance'].toFixed(2),
+							coords[i+0]['distance'].toFixed(2)]; // Replace with your actual distances
+							$ID("error_").innerHTML = $ID("error_").innerHTML + get_item_coordinates(distances_)
+						coords[i]['coords'] = get_item_coordinates(distances_)
+					}catch(e){
+						coords[i]['coords'] =[
+							parseFloat(getRandomFloat(1.5, 3.5, 4)+ "0009").toFixed(7),
+							parseFloat(getRandomFloat(1.5, 3.5, 4)+ "0009").toFixed(7)
+							]
+
+						$ID("error_").innerHTML += i+" :"+ e +"<br>"
+					}
+				}
+				$ID('data_blelogs').innerHTML = JSON.stringify(coords)
+				mark_on_map(coords)
+			}
+
+			function mark_on_map(ar_latlng){
+				var distance_tolerance = 0.000011
+				try{
+					get_loccation(function(latlng){
+						for (var i = 0; i < ar_latlng.length; i++) {
+							var lat = ((ar_latlng[i]['coords'][0]*distance_tolerance)+latlng[0]).toFixed(7)
+							var long = ((ar_latlng[i]['coords'][1]*distance_tolerance)+latlng[1]).toFixed(7)
+							var mlatlng = [lat,long];
+							$ID("activity_log").innerHTML =$ID("activity_log").innerHTML + "Marker set to: "+mlatlng +"<br>"
+							L.marker(mlatlng, {icon: beacon_icon}).addTo(map)
+						}
+					})
+				}catch(e){
+					$ID("error_").innerHTML = $ID("error_").innerHTML + "latlng : "+e
+				}
+				// .bindPopup("You are within " + radius + " meters from this point").openPopup();
+			}
+
+			var create_icon_marker = L.Icon.extend({
+				options: {
+					iconSize:     [20, 20],
+				}
+			});
+			var beacon_icon = new create_icon_marker({iconUrl: 'img/beacon.png'})
+
+			function getRandomFloat(min, max, decimals) {
+				const str = (Math.random() * (max - min) + min).toFixed(
+				decimals,
+				);
+				return parseFloat(str);
+			}
+
+			function card_create_single(device){
+				var bg_color = "x-pale-blue"
+				if(device['name']==undefined || device['name']=="undefined"){
+					bg_color = "x-pale-yellow"
+				}
+				var c_holder = (`
+					<div id='`+device['id']+`' class="`+bg_color+` x-hover-black x-container x-padding x-border-dashed" onclick="get_rssi_info('`+device['id']+`')">
+						<span class="x-text-grey">ID/Name : </span><b id="class_id" class="">`+device['id']+` | `+device['name']+`</b> 
+						<span class="x-text-grey">Connectable : </span><b id="conn" class="">`+device['connectable']+`</b><br>
+						
+						<span class="x-text-grey">RSSI : </span><b id="conn" class="">`+device['rssi']+`</b> | 
+						<span class="x-text-grey">Approx Distance : 
+							</span><b id="conn" class="">`+
+							getDistance(device['rssi']).toFixed(2)
+							+`meters</b> | 
+						<span class="x-text-grey">Advert/Broadcast : </span><b id="advert" class="">`+JSON.stringify
+						(device['advertising'])+`</b><br>
+					</div>
+				`)
+				// $ID('data_blelogs').innerText = c_holder
+				return c_holder
+				// return device
+			}
+
+			function get_rssi_info(device_id){
+				$ID("data_ble").innerHTML ="<b class='x-text-yellow x-large'>Please Wait while we load the data</b>"
+				ble.connect(device_id,
+				function(res){
+					$ID("data_ble").innerHTML ="<code>"+JSON.stringify(res)+"</code>"
+				}, function(){
+					$ID("data_ble").innerHTML ="<b class='x-text-red x-large'>Connection was cut-off before making a communication</b>"
+				});
+			}
+		</script>
+	</body>
+</html>
+
