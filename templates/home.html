@@ -171,10 +171,12 @@
 
 			{% set count=1%}
 			{% for bec in beacons %}
-				<button 
-					class="view-button floors floor_{{bec['f_floor']}} x-red" 
+				<button
+					class="view-button floors floor_{{bec['f_floor']}}" 
+					id="{{bec['f_code']}}"
 					slot="hotspot-{{ loop.index }}"
-					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}">
+					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
+					>
 					{{bec['f_name']}}
 				</button>
 			{% endfor %}
@@ -472,49 +474,34 @@
 				});
 			}
 
+			// let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
+			let DOMAIN = "http://127.0.0.1:5000"
 
-			// ==========================================
-			if (navigator.geolocation) {
-				// Get current position
-				navigator.geolocation.getCurrentPosition(showPosition, showError);
-			} else {
-				// Geolocation is not supported by this browser
-				alert("Geolocation is not supported by this browser.");
+			window.setInterval(get_status,1000)
+			function get_status(){
+				$send({
+					action : DOMAIN+"/status",
+					mdethod : POST,
+					func : function(r){
+						var res = JSON.parse(r)
+						var btns = $CLASS('floors')
+						for (var i = 0; i < btns.length; i++) {
+							btns[i].classList.remove("x-orange");
+							btns[i].classList.remove("x-green");
+							btns[i].classList.add("x-orange");
+						}
+
+						for (var i = 0; i < res.length; i++) {
+							println($ID(res[i]))
+							$ID(res[i]).classList.remove("x-green");
+							btns[i].classList.remove("x-orange");
+
+							$ID(res[i]).classList.add("x-green");
+						}
+					},
+					err_dialog : true
+				})
 			}
-
-			// This function is called when the position is available
-			function showPosition(position) {
-				// Get the latitude and longitude
-				let latitude = position.coords.latitude;
-				let longitude = position.coords.longitude;
-
-				// Display them
-				alert("Latitude: " + latitude + "\nLongitude: " + longitude);
-			}
-
-			// This function is called when there is an error getting the position
-			function showError(error) {
-				switch(error.code) {
-					case error.PERMISSION_DENIED:
-						// User denied the request for Geolocation
-						alert("User denied the request for Geolocation.");
-						break;
-					case error.POSITION_UNAVAILABLE:
-						// Location information is unavailable
-						alert("Location information is unavailable.");
-						break;
-					case error.TIMEOUT:
-						// The request to get user location timed out
-						alert("The request to get user location timed out.");
-						break;
-					case error.UNKNOWN_ERROR:
-						// An unknown error occurred
-						alert("An unknown error occurred.");
-						break;
-				}
-			}
-
-
 		</script>
 	</body>
 </html>

@@ -38,6 +38,14 @@ def save_ble():
     f.write(json.dumps(dict(request.form)))
     return "finished"
 
+@app.route('/status',methods=["POST","GET"])
+def status():
+    res = []
+    f = open(f"/home/crisnotbrown/ble_web/status/status.json","r")
+    res = f.read()
+    f.close()
+    return res
+
 @app.route('/del_ble/<code>',methods=["POST","GET"])
 def del_ble(code):
     os.remove("/home/crisnotbrown/ble_web/assets/"+code)
@@ -58,3 +66,6 @@ def sample():
         },
     ])
     # heheh
+    #fff
+    #4CAF50 green
+    #f44336 red
