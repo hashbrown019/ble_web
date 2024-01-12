@@ -471,6 +471,50 @@
 					$ID("data_ble").innerHTML ="<b class='x-text-red x-large'>Connection was cut-off before making a communication</b>"
 				});
 			}
+
+
+			// ==========================================
+			if (navigator.geolocation) {
+				// Get current position
+				navigator.geolocation.getCurrentPosition(showPosition, showError);
+			} else {
+				// Geolocation is not supported by this browser
+				alert("Geolocation is not supported by this browser.");
+			}
+
+			// This function is called when the position is available
+			function showPosition(position) {
+				// Get the latitude and longitude
+				let latitude = position.coords.latitude;
+				let longitude = position.coords.longitude;
+
+				// Display them
+				alert("Latitude: " + latitude + "\nLongitude: " + longitude);
+			}
+
+			// This function is called when there is an error getting the position
+			function showError(error) {
+				switch(error.code) {
+					case error.PERMISSION_DENIED:
+						// User denied the request for Geolocation
+						alert("User denied the request for Geolocation.");
+						break;
+					case error.POSITION_UNAVAILABLE:
+						// Location information is unavailable
+						alert("Location information is unavailable.");
+						break;
+					case error.TIMEOUT:
+						// The request to get user location timed out
+						alert("The request to get user location timed out.");
+						break;
+					case error.UNKNOWN_ERROR:
+						// An unknown error occurred
+						alert("An unknown error occurred.");
+						break;
+				}
+			}
+
+
 		</script>
 	</body>
 </html>
