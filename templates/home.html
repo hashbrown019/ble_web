@@ -159,7 +159,6 @@
 			</div>
 		</div>
 		<br>
-		<input id="longlat-input" type="" name="">
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
@@ -180,7 +179,7 @@
 					latitude = "8.948083"
 					longitude =  "125.541828"
 					slot="hotspot-button"
-					data-position="-6.552631579232208 0.0 5.368421052634026"
+					data-position="-6.552631579232208 0.3 5.368421052634026"
 					>
 					<span class="x-text-green x-circle x-orange fa fa-user-circle-o x-fading"></span>
 				</button>
@@ -194,7 +193,8 @@
 					slot="hotspot-{{ loop.index }}"
 					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
 					>
-					{{bec['f_name']}}
+						<b class="x-tiny">{{bec['f_name']}}</b><br>
+						<i class="x-tiny">{{bec['f_description']}}</i>
 				</button>
 			{% endfor %}
 		</model-viewer>
@@ -216,7 +216,7 @@
 				modelViewer.updateHotspot({
 				name: 'hotspot-button',
 				// position: diflong+' 0.0 '+diflat 
-				position: diflat+' 0.0 '+ diflong
+				position: diflat+' 1.0 '+ diflong
 			});
 			println([diflong,diflat])
 			$ID('data_ble_2').innerHTML = (diflong+"|"+diflat);
