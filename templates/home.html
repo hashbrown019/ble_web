@@ -47,7 +47,9 @@
 		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
 		crossorigin=""></script>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/Brorn.min.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/trilateration.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/index.js"></script>
 		<title>BLE Scanner FSUU</title>
 		<style type="text/css">
 			body {
@@ -99,6 +101,7 @@
 		</style>
 		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 	</head>
 	<body>
 		<header class="x-header x-light-grey">
@@ -194,7 +197,7 @@
 				</button>
 			{% endfor %}
 		</model-viewer>
-		<<!-- button class="view-button" slot="hotspot-1" data-position="-1m 1m 1m" data-normal="1m 1m 1m" data-orbit="90deg 92 1m" data-target="2m 2m 2m">
+		<!-- button class="view-button" slot="hotspot-1" data-position="-1m 1m 1m" data-normal="1m 1m 1m" data-orbit="90deg 92 1m" data-target="2m 2m 2m">
 			Hold Tight!
 		</button> -->
 		<script type="text/javascript">
@@ -236,6 +239,7 @@
 		const successCallback = (position) => {
 			getdifcoords(position.coords.latitude, position.coords.longitude);
 			console.log(position.coords.latitude, position.coords.longitude);
+			$ID('data_ble').innerHTML = (position.coords.latitude+"|"+position.coords.longitude);
 		};
 
 		// Define the error callback
@@ -243,8 +247,10 @@
 			console.log(error.code, error.message);
 		};
 
+		$onload(function(){
+			navigator.geolocation.watchPosition(successCallback, errorCallback);
+		})
 		// Request the user's location and watch for changes
-		navigator.geolocation.watchPosition(successCallback, errorCallback);
 
 		</script>
 		<!-- ========================================================== -->
@@ -274,10 +280,6 @@
 		</div>
 		<br><br><br>
 		<!-- ======================================================= -->
-		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/Brorn.min.js"></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/trilateration.js"></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/index.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
 		<script type="text/javascript">
 			var coords = []
 			var map = L.map('map',{
