@@ -497,17 +497,25 @@
 						var res = JSON.parse(r)
 						var btns = $CLASS('floors')
 						for (var i = 0; i < btns.length; i++) {
-							btns[i].classList.remove("x-orange");
-							btns[i].classList.remove("x-green");
-							btns[i].classList.add("x-orange");
+							try{
+								btns[i].classList.remove("x-orange");
+								btns[i].classList.remove("x-green");
+								btns[i].classList.add("x-orange");
+							}catch(e){
+								println(e)
+							}
 						}
 
 						for (var i = 0; i < res.length; i++) {
 							// println($ID(res[i]))
-							$ID(res[i]).classList.remove("x-green");
-							btns[i].classList.remove("x-orange");
+							try{
+								$ID(res[i]).classList.remove("x-green");
+								btns[i].classList.remove("x-orange");
 
-							$ID(res[i]).classList.add("x-green");
+								$ID(res[i]).classList.add("x-green");
+							}catch(e){
+								println(e)
+							}
 						}
 					},
 					err_dialog : true
