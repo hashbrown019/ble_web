@@ -1,4 +1,15 @@
+import socket
 
+# =================================
+IN_MAINTENANCE = False
+# IN_MAINTENANCE = False
+# =================================
+
+print(" ++ Configuration Setting ++")
+host_name = socket.gethostname()
+IP_address = socket.gethostbyname(host_name)
+
+print(f" * --{IP_address}")
 # A very simple Flask Hello World app for you to get started with...
 from flask_cors import CORS,cross_origin
 from flask import Flask, render_template,request, jsonify
@@ -67,4 +78,5 @@ def sample():
     ])
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True,host="0.0.0.0")
+	# app.run(debug=True,host="0.0.0.0",ssl_context='adhoc')

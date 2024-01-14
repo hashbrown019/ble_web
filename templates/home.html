@@ -126,7 +126,7 @@
 		<div class="x-container x-row">
 			<span>BLE device Status : </span>
 			<span id="status" class="x-center x-animate-fadingv fa fa-fading x-text-grey">Scanning</span><br>
-			<span>Scanned Devices : </span><br>
+			<span>Location details ::: </span><br>
 			<span id="data_ble" class="x-tiny" style="overflow-y:scroll;height: 50vh;"></span>
 		</div>
 		<hr>
@@ -193,7 +193,7 @@
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
-		<div class="x-round-xxlarge view" style="height: 95%;display: none;" id="map"></div>
+		<div class="x-round-xxlarge view" style="height: 95%;display: _none;" id="map"></div>
 		<hr>
 		<div class="x-row x-container">
 			<b>Output Logs</b><br>
@@ -229,11 +229,20 @@
 
 			document.addEventListener('deviceready', onDeviceReady, false);
 			function onDeviceReady() {
+				println(" psgrloaded")
 				get_loccation(function(corrds){})
 				check_if_availble()
 				change_view('floor_plan')
 
 			}
+			samp = {"lat":8.945209,"lng":125.538939}
+			map.setView([samp.lat, samp.lng], 15);
+
+			map.locate({setView: true})
+			.on('locationfound', function(e){
+			    console.log(e);
+			    $ID("data_ble").innerHTML = "L : " + e.latitude + "| Lg : "+e.longitude
+			});
 
 			// =========================================================================
 			var FLOOR = $ID("floor_plan")
@@ -476,6 +485,8 @@
 
 			let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
 			// let DOMAIN = "http://127.0.0.1:5000"
+			// let DOMAIN = "https://localhost:5000"
+			// let DOMAIN = "https://192.168.254.123:5000"
 
 			window.setInterval(get_status,1000)
 			function get_status(){
@@ -492,7 +503,7 @@
 						}
 
 						for (var i = 0; i < res.length; i++) {
-							println($ID(res[i]))
+							// println($ID(res[i]))
 							$ID(res[i]).classList.remove("x-green");
 							btns[i].classList.remove("x-orange");
 
