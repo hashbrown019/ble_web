@@ -175,14 +175,14 @@
 			style ="width: 100vw;height: 95%;"
 			>
 				<button
-					class="x-btn x-green x-circle" 
+					class="x-btn x-circle" 
 					id="pppp"
 					latitude = "8.948083"
 					longitude =  "125.541828"
 					slot="hotspot-button"
 					data-position="-6.552631579232208 0.0 5.368421052634026"
 					>
-					<span class="fa fa-user-circle-o x-fading"></span>
+					<span class="x-text-green x-circle x-orange fa fa-user-circle-o x-fading"></span>
 				</button>
 			{% set count=1%}
 			{% for bec in beacons %}
@@ -211,12 +211,12 @@
 		function getdifcoords(lat,long){
 			// diflat = scaleConversion(5/0.00019,null, 8.948083 - lat)
 			// diflong = scaleConversion(5/0.00019,null, 125.541828 - long)
-			diflat = scaleConversion(5/0.00019,null,   long-8.948083)
-			diflong = scaleConversion(5/0.00019,null, lat-125.541828 )
+			diflat = scaleConversion(5/0.00019,null,   lat-8.948083)
+			diflong = scaleConversion(5/0.00019,null, long-125.541828 )
 				modelViewer.updateHotspot({
 				name: 'hotspot-button',
-				position: diflong+' 0.0 '+diflat 
-				// position: diflat+' 0.0 '+ diflong
+				// position: diflong+' 0.0 '+diflat 
+				position: diflat+' 0.0 '+ diflong
 			});
 			println([diflong,diflat])
 			$ID('data_ble_2').innerHTML = (diflong+"|"+diflat);
@@ -244,7 +244,7 @@
 
 		// Define the success callback
 		const successCallback = (position) => {
-			getdifcoords(position.coords.latitude, position.coords.longitude);
+			// getdifcoords(position.coords.latitude, position.coords.longitude);
 			console.log(position.coords.latitude, position.coords.longitude);
 			$ID('data_ble').innerHTML = (position.coords.latitude+"|"+position.coords.longitude);
 		};
