@@ -154,6 +154,7 @@
 			</div>
 		</div>
 		<br>
+		<input id="longlat-input" type="" name="">
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
@@ -169,21 +170,93 @@
 			style ="width: 100vw;height: 95%;"
 			>
 
-			{% set count=1%}
+				<button
+					class="view-button floors floor_1" 
+					id="pppp"
+					latitude = "8.948083"
+					longitude =  "125.541828"
+					slot="hotspot-1"
+					data-position="0.1 0.1 0.1"
+					>
+					center
+				</button>
+				<button
+					class="x-btn x-green x-circle" 
+					id="pppp"
+					latitude = "8.948083"
+					longitude =  "125.541828"
+					slot="hotspot-button"
+					data-position="-6.552631579232208 0.0 5.368421052634026"
+					>
+					<span class="fa fa-user"></span>
+				</button>
+			<!-- {% set count=1%}
 			{% for bec in beacons %}
 				<button
 					class="view-button floors floor_{{bec['f_floor']}}" 
 					id="{{bec['f_code']}}"
+					latitude = "8.948083"
+					longitude =  "125.541828"
 					slot="hotspot-{{ loop.index }}"
 					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
 					>
 					{{bec['f_name']}}
 				</button>
-			{% endfor %}
+			{% endfor %} -->
 		</model-viewer>
 		<<!-- button class="view-button" slot="hotspot-1" data-position="-1m 1m 1m" data-normal="1m 1m 1m" data-orbit="90deg 92 1m" data-target="2m 2m 2m">
 			Hold Tight!
 		</button> -->
+		<script type="text/javascript">
+			
+		// A function that converts a dimension based on a scale factor
+		// scaleConversion(5/0.00019,null,0.00018)
+		var urios = "8.948083, 125.541828"
+		const modelViewer = document.querySelector('#floor_plan');
+
+		function getdifcoords(lat,long){
+			diflat = scaleConversion(5/0.00019,null, 8.948083 - lat)
+			diflong = scaleConversion(5/0.00019,null, 125.541828 - long)
+				modelViewer.updateHotspot({
+				name: 'hotspot-button',
+				position: diflong+' 0.0 '+diflat
+			});
+			return [diflong,diflat]
+		}
+
+		function scaleConversion(scaleFactor, realDimension, scaledDimension) {
+			// If the scale factor is invalid, return null
+			if (scaleFactor <= 0) {
+			return null;
+			}
+			// If the real dimension is given, divide it by the scale factor to get the scaled dimension
+			if (realDimension != null) {
+			return realDimension / scaleFactor;
+			}
+			// If the scaled dimension is given, multiply it by the scale factor to get the real dimension
+			if (scaledDimension != null) {
+			return scaledDimension * scaleFactor;
+			}
+			// If neither dimension is given, return null
+			return null;
+		}
+
+
+		// Define the success callback
+		const successCallback = (position) => {
+			getdifcoords(position.coords.latitude, position.coords.longitude);
+			console.log(position.coords.latitude, position.coords.longitude);
+		};
+
+		// Define the error callback
+		const errorCallback = (error) => {
+			console.log(error.code, error.message);
+		};
+
+		// Request the user's location and watch for changes
+		navigator.geolocation.watchPosition(successCallback, errorCallback);
+
+		</script>
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
 		<!-- ========================================================== -->
@@ -214,6 +287,7 @@
 		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/Brorn.min.js"></script>
 		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/trilateration.js"></script>
 		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/index.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
 		<script type="text/javascript">
 			var coords = []
 			var map = L.map('map',{
@@ -235,14 +309,14 @@
 				change_view('floor_plan')
 
 			}
-			samp = {"lat":8.945209,"lng":125.538939}
-			map.setView([samp.lat, samp.lng], 15);
+			// samp = {"lat":8.945209,"lng":125.538939}
+			// map.setView([samp.lat, samp.lng], 15);
 
-			map.locate({setView: true})
-			.on('locationfound', function(e){
-			    console.log(e);
-			    $ID("data_ble").innerHTML = "L : " + e.latitude + "| Lg : "+e.longitude
-			});
+			// map.locate({setView: true})
+			// .on('locationfound', function(e){
+			//     console.log(e);
+			//     $ID("data_ble").innerHTML = "L : " + e.latitude + "| Lg : "+e.longitude
+			// });
 
 			// =========================================================================
 			var FLOOR = $ID("floor_plan")
@@ -483,8 +557,8 @@
 				});
 			}
 
-			let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
-			// let DOMAIN = "http://127.0.0.1:5000"
+			// let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
+			let DOMAIN = "http://127.0.0.1:5000"
 			// let DOMAIN = "https://localhost:5000"
 			// let DOMAIN = "https://192.168.254.123:5000"
 
@@ -521,6 +595,8 @@
 					err_dialog : true
 				})
 			}
+
+
 		</script>
 	</body>
 </html>
