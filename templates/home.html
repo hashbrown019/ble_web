@@ -211,8 +211,8 @@
 		function getdifcoords(lat,long){
 			// diflat = scaleConversion(5/0.00019,null, 8.948083 - lat)
 			// diflong = scaleConversion(5/0.00019,null, 125.541828 - long)
-			diflat = scaleConversion(5/0.00019,null,   lat-8.948083)
-			diflong = scaleConversion(5/0.00019,null, long-125.541828 )
+			diflat = scaleConversion(5/0.00019,null,   long-8.948083)
+			diflong = scaleConversion(5/0.00019,null, lat-125.541828 )
 				modelViewer.updateHotspot({
 				name: 'hotspot-button',
 				position: diflong+' 0.0 '+diflat 
