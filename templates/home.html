@@ -310,16 +310,26 @@
 
 			}
 			$onload(function(){
-				println(" locating using leaflet")
-				 map.locate({setView: true, watch: true}) /* This will return map so you can do chaining */
-				.on('locationfound', function(e){
-					warnprintln(e)
-				})
-				.on('locationerror', function(e){
-					console.log(e);
-					alert("Location access denied.");
-				});
+				var geo_options = { enableHighAccuracy: true};
+			    if (window.DeviceMotionEvent == undefined) {
+			        //No accelerometer is present. Use buttons. 
+			        alert("no accelerometer");
+			    }
+			    else {
+			        alert("accelerometer found");
+			        window.addEventListener("devicemotion", accelerometerUpdate, true);
+			    }
 			})
+			function accelerometerUpdate(e) {
+			   var aX = event.accelerationIncludingGravity.x*1;
+			   var aY = event.accelerationIncludingGravity.y*1;
+			   var aZ = event.accelerationIncludingGravity.z*1;
+			   //The following two lines are just to calculate a
+			   // tilt. Not really needed. 
+			   xPosition = Math.atan2(aY, aZ);
+			   yPosition = Math.atan2(aX, aZ);
+			   println(e)
+			}
 			// samp = {"lat":8.945209,"lng":125.538939}
 			// map.setView([samp.lat, samp.lng], 15);
 
