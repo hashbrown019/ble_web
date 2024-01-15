@@ -131,9 +131,9 @@
 			<span>BLE device Status : </span>
 			<span id="status" class="x-center x-animate-fadingv fa fa-fading x-text-grey">Scanning</span><br>
 			<span>Location details ::: </span><br>
-			<span class="x-tiny">Geo: </span><span id="data_ble" style="overflow-y:scroll;height: 50vh;"></span><br>
-			<span class="x-tiny">Plane</span><span id="data_ble_2" style="overflow-y:scroll;height: 50vh;"></span><br>
-			<span class="x-tiny">Altitude</span><span id="data_ble_3" style="overflow-y:scroll;height: 50vh;"></span><br>
+			<span class="x-tiny">Geo: <span id="data_ble" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
+			<span class="x-tiny">Plane<span id="data_ble_2" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
+			<span class="x-tiny">Altitude<span id="data_ble_3" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
 		</div>
 		<hr>
 
@@ -171,7 +171,6 @@
 			alt="FSUU main Campus"
 			camera-controls
 			camera-orbit="0deg 0deg 0m"
-
 			style ="width: 100vw;height: 95%;"
 			>
 				<button
@@ -187,15 +186,15 @@
 			{% set count=1%}
 			{% for bec in beacons %}
 				<button
-					class="view-button floors floor_{{bec['f_floor']}}" 
+					class="view-button floors floor_{{bec['f_floor']}} x-center" 
 					id="{{bec['f_code']}}"
 					latitude = "8.948083"
 					longitude =  "125.541828"
 					slot="hotspot-{{ loop.index }}"
 					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
 					>
-						<b class="x-tiny">{{bec['f_name']}}</b><br>
-						<i class="x-tiny">{{bec['f_description']}}</i>
+					<b class="x-tiny">{{bec['f_name']}}</b><br>
+					<i class="x-tiny">{{bec['f_description']}}</i>
 				</button>
 			{% endfor %}
 		</model-viewer>
@@ -245,6 +244,7 @@
 
 		// Define the success callback
 		const successCallback = (position) => {
+			println(position)
 			getdifcoords(position.coords.latitude, position.coords.longitude);
 			$ID('data_ble').innerHTML = (position.coords.latitude+"|"+position.coords.longitude);
 			$ID('data_ble_3').innerHTML = (position.coords.altitude);
@@ -255,7 +255,8 @@
 		};
 
 		$onload(function(){
-			navigator.geolocation.watchPosition(successCallback, errorCallback);
+			var geo_options = { enableHighAccuracy: true};
+			navigator.geolocation.watchPosition(successCallback, errorCallback,geo_options);
 		})
 		// Request the user's location and watch for changes
 
@@ -308,6 +309,17 @@
 				change_view('floor_plan')
 
 			}
+			$onload(function(){
+				println(" locating using leaflet")
+				 map.locate({setView: true, watch: true}) /* This will return map so you can do chaining */
+				.on('locationfound', function(e){
+					warnprintln(e)
+				})
+				.on('locationerror', function(e){
+					console.log(e);
+					alert("Location access denied.");
+				});
+			})
 			// samp = {"lat":8.945209,"lng":125.538939}
 			// map.setView([samp.lat, samp.lng], 15);
 
