@@ -134,6 +134,7 @@
 			<span class="x-tiny">Geo: <span id="data_ble" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
 			<span class="x-tiny">Plane<span id="data_ble_2" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
 			<span class="x-tiny">Altitude<span id="data_ble_3" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
+			<span class="x-tiny">TIlt<span id="data_ble_4" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
 		</div>
 		<hr>
 
@@ -329,6 +330,7 @@
 			   xPosition = Math.atan2(aY, aZ);
 			   yPosition = Math.atan2(aX, aZ);
 			   println(e)
+			   $ID("data_ble_4").innerHTML = JSON.stringify(e)
 			}
 			// samp = {"lat":8.945209,"lng":125.538939}
 			// map.setView([samp.lat, samp.lng], 15);
