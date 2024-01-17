@@ -17,11 +17,11 @@ def path_finder_():
     return jsonify(path_finder.find_())
 
 
-@app.route('/_test_',methods=["POST","GET"])
+@app.route('/usermode',methods=["POST","GET"])
 def index():
     return render_template("home.html",beacons = ls_ble())
 
-@app.route('/',methods=["POST","GET"])
+@app.route('/adminmode',methods=["POST","GET"])
 def admin():
     return render_template("admin.html",beacons = ls_ble())
 
