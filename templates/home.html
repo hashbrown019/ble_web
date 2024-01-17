@@ -40,16 +40,16 @@
 		<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
 		<!-- <meta name="color-scheme" content="light dark"> -->
 		<!-- <link rel="stylesheet" href="css/index.css"> -->
-		<link rel="stylesheet" href="https://crisnotbrown.pythonanywhere.com/_test_/css/x.css">
+		<link rel="stylesheet" href="https://crisnotbrown.pythonanywhere.com/static/_test_/css/x.css">
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
 		crossorigin=""/>
 		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
 		crossorigin=""></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/_test_/js/Brorn.min.js"></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/_test_/js/trilateration.js"></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/_test_/js/index.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/Brorn.min.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/trilateration.js"></script>
+		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/index.js"></script>
 		<title>BLE Scanner FSUU</title>
 		<style type="text/css">
 			body {
@@ -84,12 +84,12 @@
 		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
-	<body style="background-image: url('https://crisnotbrown.pythonanywhere.com/_test_/img/bg.jpg');">
+	<body style="background-image: url('https://crisnotbrown.pythonanywhere.com/static/_test_/img/bg.jpg');">
 		<!-- http://127.0.0.1:5000 -->
 		<header class="x-header x-teal">
 			<div class="x-container">
-				<img onclick="stop_all_scan()" src="https://crisnotbrown.pythonanywhere.com/_test_/img/2.png" class="x-img x-left" style="max-width: 22%;"><br>
-				<!-- <img onclick="stop_all_scan()" src="https://crisnotbrown.pythonanywhere.com/_test_/img/barcode-scan.gif" class="x-img x-left" style="max-width: 20%;"><br> -->
+				<img onclick="stop_all_scan()" src="https://crisnotbrown.pythonanywhere.com/static/_test_/img/2.png" class="x-img x-left" style="max-width: 22%;"><br>
+				<!-- <img onclick="stop_all_scan()" src="https://crisnotbrown.pythonanywhere.com/static/_test_/img/barcode-scan.gif" class="x-img x-left" style="max-width: 20%;"><br> -->
 				<div class="x-container x-right">
 					<b class="x-large x-text-orange">
 						<u>BLE Beacon Locator</u><br>
@@ -110,7 +110,7 @@
 		<model-viewer 
 			id = "floor_plan"
 			class ="view x-display-container"
-			src="https://crisnotbrown.pythonanywhere.com/_test_/assets/floor/1.glb"
+			src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
 			alt="FSUU main Campus"
 			camera-controls
 			camera-orbit="0deg 0deg 0m"
@@ -329,7 +329,7 @@
 			function ch_floor(floor){
 				println("floor = "+floor)
 				FLOOR_SEL = floor
-				$ID("floor_plan").src = "https://crisnotbrown.pythonanywhere.com/_test_/assets/floor/"+floor+".glb"
+				$ID("floor_plan").src = "https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/"+floor+".glb"
 				ch_floor_deac(floor)
 			}
 
