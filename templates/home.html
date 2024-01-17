@@ -40,16 +40,16 @@
 		<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
 		<!-- <meta name="color-scheme" content="light dark"> -->
 		<!-- <link rel="stylesheet" href="css/index.css"> -->
-		<link rel="stylesheet" href="https://crisnotbrown.pythonanywhere.com/static/_test_/css/x.css">
+		<link rel="stylesheet" href="http://127.0.0.1:5000/static/_test_/css/x.css">
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
 		crossorigin=""/>
 		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
 		crossorigin=""></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/Brorn.min.js"></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/trilateration.js"></script>
-		<script src="https://crisnotbrown.pythonanywhere.com/static/_test_/js/index.js"></script>
+		<script src="http://127.0.0.1:5000/static/_test_/js/Brorn.min.js"></script>
+		<script src="http://127.0.0.1:5000/static/_test_/js/trilateration.js"></script>
+		<script src="http://127.0.0.1:5000/static/_test_/js/index.js"></script>
 		<title>BLE Scanner FSUU</title>
 		<style type="text/css">
 			body {
@@ -60,7 +60,7 @@
 				height: 80%;
 				width: 100vw;
 			}
-			.view-button {
+			.view-button_ {
 	     		background: #fff;
 				border-radius: 4px;
 				border: none;
@@ -79,133 +79,98 @@
 				height: max-content;
 				transform: translate3d(-50%, -50%, 0);
 		    }
-
-			/* This styles the aside container */
-/*            #aSide {
-				height: 600px;
-				width: 600px;
-				position: absolute;
-				top: calc(50% - 250px);
-				right: 7%;
-			}
-
-			/* This styles the 3D object inserted in the aside container */
-/*            #aSide model-viewer {
-				height: 600px;
-				width: 100vw;
-				position: absolute;
-				top: 0;
-				left: 0;
-				border: none;
-			}*/
 		</style>
 		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
-	<body>
-		<header class="x-header x-light-grey">
+	<body style="background-image: url('http://127.0.0.1:5000/static/_test_/img/bg.jpg');">
+		<!-- http://127.0.0.1:5000 -->
+		<header class="x-header x-teal">
 			<div class="x-container">
-				<img onclick="stop_all_scan()" src="https://crisnotbrown.pythonanywhere.com/static/_test_/img/barcode-scan.gif" class="x-img x-left" style="max-width: 20%;"><br>
+				<img onclick="stop_all_scan()" src="http://127.0.0.1:5000/static/_test_/img/2.png" class="x-img x-left" style="max-width: 22%;"><br>
+				<!-- <img onclick="stop_all_scan()" src="http://127.0.0.1:5000/static/_test_/img/barcode-scan.gif" class="x-img x-left" style="max-width: 20%;"><br> -->
 				<div class="x-container x-right">
 					<b class="x-large x-text-orange">
-						BLE Beacon Scanner
+						<u>BLE Beacon Locator</u><br>
+						<span class="x-tiny x-text-white x-right">for navigation inside FSUU</span>
 					</b>
 				</div>
 			</div>
 		</header>
-		<div class="x-container x-padding ">
-			<span class="x-text-grey">Discovered Devices will appear on the map with approx 10 meters in range</span>
-			<br>
-			<div class="x-container">
-				<!-- <span class="x-padding x-round-large x-border x-border-green" onclick="refresh()">
-					Rescan <span class="fa fa-refresh"></span>
-				</span>
-				<span class="x-padding x-round-large x-border x-border-red" onclick="stop_all_scan()">
-					Stop Scan and reveal beacon places <span class="fa fa-refresh"></span>
-				</span> -->
-				<!-- <span class="x-right x-padding x-round-large x-border x-border-orange">Or use native <b onclick="ble_2()">BLE Scanner</b></span> -->
-			</div>
-		</div>
-		<div class="x-container x-row">
-			<span>BLE device Status : </span>
-			<span id="status" class="x-center x-animate-fadingv fa fa-fading x-text-grey">Scanning</span><br>
-			<span>Location details ::: </span><br>
-			<span class="x-tiny">Geo: <span id="data_ble" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
-			<span class="x-tiny">Plane<span id="data_ble_2" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
-			<span class="x-tiny">Altitude<span id="data_ble_3" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
-			<span class="x-tiny">TIlt<span id="data_ble_4" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
-		</div>
-		<hr>
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
+		<!-- ====================================================================== -->
 
-		<div class="x-container">
-			<b>Map Modes</b><br>
-			<span class="x-text-grey x-tiny">Select map mode is to switch from natiove flat map to 3D</span>
-			<br>
-			<br>
-			<div class="x-row">
-			<div class="x-row">
-				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(1)">
-					1st Floor
-				</button>
-				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(2)">
-					2nd Floor
-				</button>
-				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(3)">
-					3rd Floor
-				</button>
-				<button class="x-padding x-round-large x-border x-border-blue x-hover-black" onclick="ch_floor(4)">
-					4th Floor
-				</button>
-			</div>
-			</div>
-		</div>
-		<br>
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
 		<model-viewer 
 			id = "floor_plan"
-			class ="x-border-red view x-border"
-			src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
+			class ="view x-display-container"
+			src="http://127.0.0.1:5000/static/_test_/assets/floor/1.glb"
 			alt="FSUU main Campus"
 			camera-controls
 			camera-orbit="0deg 0deg 0m"
-			style ="width: 100vw;height: 95%;"
+			style ="width: 100vw;height: 90vh;"
 			>
 				<button
 					class="x-btn x-circle" 
-					id="pppp"
+					id="pppp_s"
 					latitude = "8.948083"
 					longitude =  "125.541828"
 					slot="hotspot-button"
 					data-position="-6.552631579232208 0.3 5.368421052634026"
 					>
-					<span class="x-text-green x-circle x-orange fa fa-user-circle-o x-fading"></span>
+					<span class="x-text-green x-circle x-blue x-text-white fa fa-user-circle-o x-fading"></span>
 				</button>
 			{% set count=1%}
 			{% for bec in beacons %}
-				<button
-					class="view-button floors floor_{{bec['f_floor']}} x-center" 
+				<span
+					class="view-button floors x-left floor_{{bec['f_floor']}} x-center x-round-xlarge" 
 					id="{{bec['f_code']}}"
 					latitude = "8.948083"
 					longitude =  "125.541828"
 					slot="hotspot-{{ loop.index }}"
 					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
 					>
-					<b class="x-tiny">{{bec['f_name']}}</b><br>
-					<i class="x-tiny">{{bec['f_description']}}</i>
-				</button>
+					<b class="x-tiny">{{bec['f_name']}}</b> <br>
+					<!-- <i class="x-tiny">{{bec['f_description']}}</i><br> -->
+					<span class="fa fa-bullseye"></span>
+				</span>
 			{% endfor %}
+			<span class="x-display-topleft x-text-white">Discovered Devices will appear<br> on the map with approx<br> 10 meters in range</span><br>
+
+			<div class="x-display-topright ">
+				<span class="x-tiny x-white x-right">Geo: <span id="data_ble" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
+				<span class="x-tiny x-white x-right">Plane: <span id="data_ble_2" style="overflow-y:scroll;height: 50vh;"><i>Triangulating...</i></span></span><br>
+				<span class="x-tiny x-white x-right">Altitude: <span id="data_ble_3" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
+				<span class="x-tiny x-white x-right" style="display: none;">Tilt<span id="data_ble_4" style="overflow-y:scroll;height: 50vh;display: none;"><i>Detecting...</i></span></span>
+			</div>
+			<div class="x-bottom x-container">
+				<div class="x-container">
+					<b class="x-text-white">Floors</b><br>
+					<span class="x-text-white x-tiny">Select a floor manually by clicking the button bellow</span>
+				</div>
+				<div class="x-row x-container x-center" style="width:100vw">
+					<button class="x-padding x-round-large x-border x-border-blue x-hover-black x-col" style="width:15%;" onclick="ch_floor(1)">
+						1st Floor
+					</button>
+					<button class="x-padding x-round-large x-border x-border-blue x-hover-black x-col" style="width:15%;" onclick="ch_floor(2)">
+						2nd Floor
+					</button>
+					<button class="x-padding x-round-large x-border x-border-blue x-hover-black x-col" style="width:15%;" onclick="ch_floor(3)">
+						3rd Floor
+					</button>
+					<button class="x-padding x-round-large x-border x-border-blue x-hover-black x-col" style="width:15%;" onclick="ch_floor(4)">
+						4th Floor
+					</button>
+				</div>
+			</div>
 		</model-viewer>
-		<!-- button class="view-button" slot="hotspot-1" data-position="-1m 1m 1m" data-normal="1m 1m 1m" data-orbit="90deg 92 1m" data-target="2m 2m 2m">
-			Hold Tight!
-		</button> -->
 		<script type="text/javascript">
-			
-		// A function that converts a dimension based on a scale factor
-		// scaleConversion(5/0.00019,null,0.00018)
 		var urios = "8.948083, 125.541828"
 		const modelViewer = document.querySelector('#floor_plan');
 
@@ -245,7 +210,7 @@
 
 		// Define the success callback
 		const successCallback = (position) => {
-			println(position)
+			println("Loc on web "+ JSON.stringify(position))
 			getdifcoords(position.coords.latitude, position.coords.longitude);
 			$ID('data_ble').innerHTML = (position.coords.latitude+"|"+position.coords.longitude);
 			$ID('data_ble_3').innerHTML = (position.coords.altitude);
@@ -262,18 +227,9 @@
 		// Request the user's location and watch for changes
 
 		</script>
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
-		<!-- ========================================================== -->
 		<div class="x-round-xxlarge view" style="height: 95%;display: none;" id="map"></div>
 		<hr>
-		<div class="x-row x-container">
+		<div class="x-row x-container" style="display:none">
 			<b>Output Logs</b><br>
 			<span class="x-text-grey x-tiny">View Data logs that has been retrieve and gather and error/warning logs</span>
 			<div class="x-row">
@@ -305,7 +261,6 @@
 			document.addEventListener('deviceready', onDeviceReady, false);
 			function onDeviceReady() {
 				println(" psgrloaded")
-				get_loccation(function(corrds){})
 				check_if_availble()
 				change_view('floor_plan')
 
@@ -374,7 +329,7 @@
 			function ch_floor(floor){
 				println("floor = "+floor)
 				FLOOR_SEL = floor
-				$ID("floor_plan").src = "https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/"+floor+".glb"
+				$ID("floor_plan").src = "http://127.0.0.1:5000/static/_test_/assets/floor/"+floor+".glb"
 				ch_floor_deac(floor)
 			}
 
@@ -582,7 +537,7 @@
 				});
 			}
 
-			let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
+			let DOMAIN = "http://127.0.0.1:5000/"
 			// let DOMAIN = "http://127.0.0.1:5000"
 			// let DOMAIN = "https://localhost:5000"
 			// let DOMAIN = "https://192.168.254.123:5000"

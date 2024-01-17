@@ -14,6 +14,7 @@ print(f" * --{IP_address}")
 from flask_cors import CORS,cross_origin
 from flask import Flask, render_template,request, jsonify
 import json, os
+import path_finder
 
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
@@ -22,11 +23,15 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_SORT_KEYS'] = False
 
-@app.route('/_test_',methods=["POST","GET"])
+@app.route('/path_finder',methods=["POST","GET"])
+def path_finder_():
+    return jsonify(path_finder.find_())
+
+@app.route('/usermode',methods=["POST","GET"])
 def index():
     return render_template("home.html",beacons = ls_ble())
 
-@app.route('/',methods=["POST","GET"])
+@app.route('/adminmode',methods=["POST","GET"])
 def admin():
     return render_template("admin.html",beacons = ls_ble())
 

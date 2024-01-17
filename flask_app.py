@@ -3,6 +3,7 @@
 from flask_cors import CORS,cross_origin
 from flask import Flask, render_template,request, jsonify
 import json, os
+import path_finder
 
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
@@ -10,6 +11,11 @@ app.secret_key="blebleblebleble"
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_SORT_KEYS'] = False
+
+@app.route('/path_finder',methods=["POST","GET"])
+def path_finder_():
+    return jsonify(path_finder.find_())
+
 
 @app.route('/_test_',methods=["POST","GET"])
 def index():
