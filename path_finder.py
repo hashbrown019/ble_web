@@ -1,6 +1,7 @@
 import math
 
 def find_():
+	MAP =grid["1"]
 	start = (0,0)
 	end = (4,0)
 	cost = 1
@@ -9,15 +10,13 @@ def find_():
 	came_from = {}
 	path = None
 	while open_set:
-
 		current = min(open_set, key=lambda node: cost_so_far[node] + heuristic(node, end))
 		open_set.remove(current)
 
-
 		if current == end: break
-		for neighbor in get_neighbors(current, grid):
+		for neighbor in get_neighbors(current, MAP):
 			new_cost = cost_so_far[current] + cost
-			if ((neighbor not in cost_so_far or new_cost < cost_so_far[neighbor] )and grid[neighbor[0]][neighbor[1]]==0):
+			if ((neighbor not in cost_so_far or new_cost < cost_so_far[neighbor] )and MAP[neighbor[0]][neighbor[1]]==0):
 				cost_so_far[neighbor] = new_cost
 				came_from[neighbor] = current
 				open_set.add(neighbor)
