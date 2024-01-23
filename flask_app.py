@@ -16,7 +16,7 @@ app.config['JSON_SORT_KEYS'] = False
 def get_path_to(lat,lng,beacon):
     paths_ = path_finder.find_(lat,lng,beacon.split(" "))
     print(paths_)
-    return paths_
+    return jsonify(paths_)
     # return render_template("home.html",beacons = ls_ble(),paths=paths_,path_len=len(paths_))
 
 
