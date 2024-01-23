@@ -1,5 +1,3 @@
-
-# A very simple Flask Hello World app for you to get started with...
 from flask_cors import CORS,cross_origin
 from flask import Flask, render_template,request, jsonify
 import json, os
@@ -12,10 +10,17 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_SORT_KEYS'] = False
 
+@app.route('/get_path_to/<lat>/<lng>/<beacon>',methods=["POST","GET"])
+def get_path_to(lat,lng,beacon):
+    paths_ = path_finder.find_(lat,lng,beacon.split(" "))
+    print(paths_)
+    return paths_
+    # return render_template("home.html",beacons = ls_ble(),paths=paths_,path_len=len(paths_))
+
+
 @app.route('/path_finder',methods=["POST","GET"])
 def path_finder_():
     return jsonify(path_finder.find_())
-
 
 @app.route('/usermode',methods=["POST","GET"])
 def index():
@@ -27,12 +32,12 @@ def admin():
 
 def ls_ble():
     res = []
-    dir_path = "/home/crisnotbrown/ble_web/assets/"
+    dir_path = "assets/"
     # Iterate directory
     for path in os.listdir(dir_path):
         # check if current path is a file
         if os.path.isfile(os.path.join(dir_path, path)):
-            f = open(f"/home/crisnotbrown/ble_web/assets/{path}","r")
+            f = open(f"assets/{path}","r")
             res.append(json.loads(f.read()))
             f.close()
     return(res)
@@ -40,21 +45,21 @@ def ls_ble():
 @app.route('/save_ble',methods=["POST","GET"])
 def save_ble():
     codes = request.form['f_code']
-    f = open(f"/home/crisnotbrown/ble_web/assets/{codes}","w")
+    f = open(f"assets/{codes}","w")
     f.write(json.dumps(dict(request.form)))
     return "finished"
 
 @app.route('/status',methods=["POST","GET"])
 def status():
     res = []
-    f = open(f"/home/crisnotbrown/ble_web/status/status.json","r")
+    f = open("status/status.json","r")
     res = f.read()
     f.close()
     return res
 
 @app.route('/del_ble/<code>',methods=["POST","GET"])
 def del_ble(code):
-    os.remove("/home/crisnotbrown/ble_web/assets/"+code)
+    os.remove("assets/"+code)
     return "finished"
 
 @app.route('/sample',methods=["POST","GET"])
@@ -71,6 +76,7 @@ def sample():
             "description" : "sample description"
         },
     ])
+
     # heheh
     #fff
     #4CAF50 green
