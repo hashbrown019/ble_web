@@ -1,22 +1,4 @@
 <!DOCTYPE html>
-<!--
-	Licensed to the Apache Software Foundation (ASF) under one
-	or more contributor license agreements.  See the NOTICE file
-	distributed with this work for additional information
-	regarding copyright ownership.  The ASF licenses this file
-	to you under the Apache License, Version 2.0 (the
-	"License"); you may not use this file except in compliance
-	with the License.  You may obtain a copy of the License at
-
-	http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the License is distributed on an
-	"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-	 KIND, either express or implied.  See the License for the
-	specific language governing permissions and limitations
-	under the License.
--->
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -61,7 +43,7 @@
 				width: 100vw;
 			}
 			.view-button_ {
-	     		background: #fff;
+					background: #fff;
 				border-radius: 4px;
 				border: none;
 				box-sizing: border-box;
@@ -78,10 +60,10 @@
 				width: max-content;
 				height: max-content;
 				transform: translate3d(-50%, -50%, 0);
-		    }
+				}
 		</style>
-		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-		<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+		<script type="module" src="https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"></script>
+		<!-- <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script> -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 	<body style="background-image: url('https://crisnotbrown.pythonanywhere.com/static/_test_/img/bg.jpg');">
@@ -98,6 +80,7 @@
 				</div>
 			</div>
 		</header>
+
 		<!-- ====================================================================== -->
 		<!-- ====================================================================== -->
 		<!-- ====================================================================== -->
@@ -113,6 +96,7 @@
 			src="https://crisnotbrown.pythonanywhere.com/static/_test_/assets/floor/1.glb"
 			alt="FSUU main Campus"
 			camera-controls
+			disable-zoom disable-tap
 			camera-orbit="0deg 0deg 0m"
 			style ="width: 100vw;height: 90vh;"
 			>
@@ -126,6 +110,17 @@
 					>
 					<span class="x-text-green x-circle x-blue x-text-white fa fa-user-circle-o x-fading"></span>
 				</button>
+
+				<!-- <span
+					class="x-btn x-circle" 
+					id="lllll"
+					latitude = "8.948083"
+					longitude =  "125.541828"
+					slot="hotspot-center"
+					data-position="0.0 0.3 0.0"
+					>
+					x
+				</span> -->
 			{% set count=1%}
 			{% for bec in beacons %}
 				<span
@@ -135,11 +130,22 @@
 					longitude =  "125.541828"
 					slot="hotspot-{{ loop.index }}"
 					data-position="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
+					onclick = 'get_direction(this)'
 					>
 					<b class="x-tiny">{{bec['f_name']}}</b> <br>
 					<!-- <i class="x-tiny">{{bec['f_description']}}</i><br> -->
 					<span class="fa fa-bullseye"></span>
 				</span>
+			{% endfor %}
+
+			{% for path in paths %}
+			<button
+				class="path x-btn x-circle" 
+				slot="hotspot-{{ loop.index + path_len | int}}"
+				data-position="{{path['x']}} 0.3 {{path['z']}}"
+				>
+				<span class="x-text-red x-circle fa fa-circle "></span>
+			</button>
 			{% endfor %}
 			<span class="x-display-topleft x-text-white">Discovered Devices will appear<br> on the map with approx<br> 10 meters in range</span><br>
 
@@ -171,44 +177,42 @@
 			</div>
 		</model-viewer>
 		<script type="text/javascript">
+		// let DOMAIN = "http://127.0.0.1:5000/"
+		// let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
+		let DOMAIN = "http://localhost:5000/"
+		// let DOMAIN = "https://192.168.254.123:5000"
+
 		var urios = "8.948083, 125.541828"
+		let MY_LONG; let MY_LAT
+
+
 		const modelViewer = document.querySelector('#floor_plan');
 
 		function getdifcoords(lat,long){
-			// diflat = scaleConversion(5/0.00019,null, 8.948083 - lat)
-			// diflong = scaleConversion(5/0.00019,null, 125.541828 - long)
-			diflat = scaleConversion(5/0.00019,null,   lat-8.948083)
+			// diflat = scaleConversion(5/0.00019,null,   lat-8.948083)
+			// diflong = scaleConversion(5/0.00019,null, long-125.541828 )
+			diflat = scaleConversion(5/0.00011,null,   lat-8.948083)
 			diflong = scaleConversion(5/0.00019,null, long-125.541828 )
+			MY_LONG = diflong
+			MY_LAT = diflat
 				modelViewer.updateHotspot({
 				name: 'hotspot-button',
-				// position: diflong+' 0.0 '+diflat 
 				position: diflat+' 0.5 '+ diflong
 			});
-			// println([diflong,diflat])
-			$ID('data_ble_2').innerHTML = (diflong+"|"+diflat);
 
+			
+			$ID('data_ble_2').innerHTML = (diflong+"|"+diflat);
 			return [diflong,diflat]
 		}
 
 		function scaleConversion(scaleFactor, realDimension, scaledDimension) {
-			// If the scale factor is invalid, return null
-			if (scaleFactor <= 0) {
-			return null;
-			}
-			// If the real dimension is given, divide it by the scale factor to get the scaled dimension
+			if (scaleFactor <= 0) {return null}
 			if (realDimension != null) {
-			return realDimension / scaleFactor;
-			}
-			// If the scaled dimension is given, multiply it by the scale factor to get the real dimension
-			if (scaledDimension != null) {
-			return scaledDimension * scaleFactor;
-			}
-			// If neither dimension is given, return null
+			return realDimension / scaleFactor}
+			if (scaledDimension != null) {	return scaledDimension * scaleFactor}
 			return null;
 		}
 
-
-		// Define the success callback
 		const successCallback = (position) => {
 			println("Loc on web "+ JSON.stringify(position))
 			getdifcoords(position.coords.latitude, position.coords.longitude);
@@ -223,7 +227,94 @@
 		$onload(function(){
 			var geo_options = { enableHighAccuracy: true};
 			navigator.geolocation.watchPosition(successCallback, errorCallback,geo_options);
+			// window.setInterval(function(){
+			// 	getdifcoords(8.947936, 125.541991);
+			// },1000)
 		})
+
+		function get_direction(elem){
+			var beacon_ccords_ = elem.getAttribute("data-position")
+			$send({
+				action : DOMAIN+"get_path_to/"+MY_LAT+"/"+MY_LONG+"/"+beacon_ccords_,
+				method: POST,
+				func : function(res){
+					var resp = JSON.parse(res)
+					println("==============")
+					for (var i = 0; i < resp.length; i++) {
+						if("x" in resp[i] && "z" in resp[i] ){
+							if((resp[i]["x"]!= undefined || resp[i]["z"]!= undefined )|| (resp[i]["x"]!= undefined || resp[i]["z"]!= undefined ) ){
+								follow(resp[i]["x"],resp[i]["z"])
+
+							}else{
+								alert("Error in getting Direction")
+							}
+						}
+					}
+				}
+			})
+		}
+
+		function follow(_x2,_y2){
+			const phph = document.querySelectorAll('.path');
+			phph.forEach(box => {
+				box.remove();
+			});
+
+			let x1 = `${MY_LAT}`.split(".")[0];
+			let y1 = `${MY_LONG}`.split(".")[0];
+			let _x1 = `${MY_LAT}`.split(".")[1];
+			let _y1 = `${MY_LONG}`.split(".")[1];
+			let x2 = `${_x2}`.split(".")[0];
+			let y2 = `${_y2}`.split(".")[0];
+			var path_holder = ""
+			var loop_count =0
+			var is_true = false
+			var otherbtn_count = $CLASS("view-button").length
+			var temp = 0
+			while (x1 != x2 || y1 != y2) {
+				// Your code here
+				var is_con =false
+				var HAAAAA = loop_count+otherbtn_count
+				// console.log(`x1: ${x1}, y1: ${y1} ==== x2: ${x2}, y2: ${y2}`);
+				if (x1 < x2) {x1++;}
+				else if (x1 > x2) {x1--;}
+				if (y1 < y2) {y1++;}
+				else if (y1 > y2) {y1--;}
+
+				var __paths = $CLASS('path')
+				for (var i = 0; i < __paths.length; i++) {
+					if(parseInt(__paths[i].getAttribute("slot").split("-")[1])+1==parseInt(HAAAAA)){
+						println(parseInt(__paths[i].getAttribute("slot").split("-")[1])+1+"  ==  "+parseInt(HAAAAA))
+						println("matched ")
+						is_con =false
+					}else{
+						is_con = true
+					}
+				}
+				if(is_con){
+					println("yawaaaaaaassss")
+				}else{
+					$ID("floor_plan").innerHTML  += (`
+					<button
+						class="path x-btn x-circle" 
+						slot="hotspot-${HAAAAA}"
+						data-position="${x1}.${_x1} 0.3 ${y1}.${_y1}"
+						>
+						<span class="x-text-red x-circle fa fa-circle "></span>
+					</button>
+					`)
+				}
+				loop_count+=1
+
+			}
+
+			if(loop_count >=1000 || (x1 !== x2 || y1 !== y2)){
+				is_true = false
+			}
+
+			// $ID("floor_plan").innerHTML +=path_holder
+
+		}
 		// Request the user's location and watch for changes
 
 		</script>
@@ -248,8 +339,8 @@
 		<script type="text/javascript">
 			var coords = []
 			var map = L.map('map',{
-					    minZoom: 15,
-					    maxZoom: 50
+					minZoom: 15,
+					maxZoom: 50
 			});
 			// var map = L.map('map').setView([8.947894,125.5418056], 21);
 			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -267,26 +358,28 @@
 			}
 			$onload(function(){
 				var geo_options = { enableHighAccuracy: true};
-			    if (window.DeviceMotionEvent == undefined) {
-			        //No accelerometer is present. Use buttons. 
-			        alert("no accelerometer");
-			    }
-			    else {
-			        // alert("accelerometer found");
-			        window.addEventListener("devicemotion", accelerometerUpdate, true);
-			    }
+					if (window.DeviceMotionEvent == undefined) {
+							//No accelerometer is present. Use buttons. 
+							alert("no accelerometer");
+					}
+					else {
+							// alert("accelerometer found");
+							window.addEventListener("devicemotion", accelerometerUpdate, true);
+					}
 			})
 			function accelerometerUpdate(e) {
-			   var aX = event.accelerationIncludingGravity.x*1;
-			   var aY = event.accelerationIncludingGravity.y*1;
-			   var aZ = event.accelerationIncludingGravity.z*1;
-			   //The following two lines are just to calculate a
-			   // tilt. Not really needed. 
-			   xPosition = Math.atan2(aY, aZ);
-			   yPosition = Math.atan2(aX, aZ);
-			   println(e)
-			   $ID("data_ble_4").innerHTML = ": " +e.accelerationIncludingGravity.x + "|" + e.accelerationIncludingGravity.y + "|" + e.accelerationIncludingGravity.z 
+				 var aX = event.accelerationIncludingGravity.x*1;
+				 var aY = event.accelerationIncludingGravity.y*1;
+				 var aZ = event.accelerationIncludingGravity.z*1;
+				 //The following two lines are just to calculate a
+				 // tilt. Not really needed. 
+				 xPosition = Math.atan2(aY, aZ);
+				 yPosition = Math.atan2(aX, aZ);
+				 println(e)
+				 $ID("data_ble_4").innerHTML = ": " +e.accelerationIncludingGravity.x + "|" + e.accelerationIncludingGravity.y + "|" + e.accelerationIncludingGravity.z 
 			}
+
+
 			// samp = {"lat":8.945209,"lng":125.538939}
 			// map.setView([samp.lat, samp.lng], 15);
 
@@ -295,8 +388,8 @@
 			//     console.log(e);
 			//     $ID("data_ble").innerHTML = "L : " + e.latitude + "| Lg : "+e.longitude
 			// });
-
 			// =========================================================================
+			
 			var points = []
 			var FLOOR = $ID("floor_plan")
 			FLOOR.addEventListener("click", (event) => {
@@ -309,6 +402,11 @@
 					points.push([result.position.x, result.position.z])
 				}
 			});
+
+			function get_clicked() {
+				// body...
+				println(points)
+			}
 			// ===================================================================
 			// ===================================================================
 			// const FLOOR = document.querySelector("#floor_plan");
@@ -368,7 +466,7 @@
 
 					},function (error) {
 						alert('code: '    + error.code    + '\n' +
-							  'message: ' + error.message + '\n');
+								'message: ' + error.message + '\n');
 					});
 			}
 
@@ -408,8 +506,8 @@
 				else{
 					map = L.map('map',{
 
-					    minZoom: 15,
-					    maxZoom: 50
+							minZoom: 15,
+							maxZoom: 50
 					});
 						// var map = L.map('map').setView([8.947894,125.5418056], 21);
 						L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -537,11 +635,7 @@
 				});
 			}
 
-			// let DOMAIN = "http://127.0.0.1:5000/"
-			let DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
-			// let DOMAIN = "https://localhost:5000"
-			// let DOMAIN = "https://192.168.254.123:5000"
-
+			
 			window.setInterval(get_status,1000)
 			function get_status(){
 				$send({

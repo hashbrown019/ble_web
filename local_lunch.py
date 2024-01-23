@@ -23,6 +23,14 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_SORT_KEYS'] = False
 
+@app.route('/get_path_to/<lat>/<lng>/<beacon>',methods=["POST","GET"])
+def get_path_to(lat,lng,beacon):
+    paths_ = path_finder.find_(lat,lng,beacon.split(" "))
+    print(paths_)
+    return paths_
+    # return render_template("home.html",beacons = ls_ble(),paths=paths_,path_len=len(paths_))
+
+
 @app.route('/path_finder',methods=["POST","GET"])
 def path_finder_():
     return jsonify(path_finder.find_())
@@ -82,6 +90,5 @@ def sample():
         },
     ])
 
-if __name__ == '__main__':
-	app.run(debug=True,host="0.0.0.0")
+if __name__ == '__main__':app.run(debug=True,host="0.0.0.0")
 	# app.run(debug=True,host="0.0.0.0",ssl_context='adhoc')
