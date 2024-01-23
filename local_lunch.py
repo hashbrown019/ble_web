@@ -16,6 +16,8 @@ from flask import Flask, render_template,request, jsonify
 import json, os
 import path_finder
 
+DOMAIN = "http://127.0.0.1:5000/"
+
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.secret_key="blebleblebleble"
@@ -37,7 +39,7 @@ def path_finder_():
 
 @app.route('/usermode',methods=["POST","GET"])
 def index():
-    return render_template("home.html",beacons = ls_ble())
+    return render_template("home.html",beacons = ls_ble(),domain=DOMAIN)
 
 @app.route('/adminmode',methods=["POST","GET"])
 def admin():

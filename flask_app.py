@@ -12,6 +12,9 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_SORT_KEYS'] = False
 
+
+DOMAIN = "https://crisnotbrown.pythonanywhere.com/"
+
 @app.route('/get_path_to/<lat>/<lng>/<beacon>',methods=["POST","GET"])
 def get_path_to(lat,lng,beacon):
     paths_ = path_finder.find_(lat,lng,beacon.split(" "))
@@ -27,7 +30,7 @@ def path_finder_():
 
 @app.route('/usermode',methods=["POST","GET"])
 def index():
-    return render_template("home.html",beacons = ls_ble())
+    return render_template("home.html",beacons = ls_ble(),domain=DOMAIN)
 
 @app.route('/adminmode',methods=["POST","GET"])
 def admin():
