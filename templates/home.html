@@ -154,6 +154,23 @@
 				<span class="x-tiny x-white x-right x-hide">Altitude: <span id="data_ble_3" style="overflow-y:scroll;height: 50vh;"><i>Detecting...</i></span></span><br>
 				<span class="x-tiny x-white x-right" style="display: none;">Tilt<span id="data_ble_4" style="overflow-y:scroll;height: 50vh;display: none;"><i>Detecting...</i></span></span>
 			</div>
+			<br>
+			<br>
+			<br>
+			{% set count=1%}
+			<select onchange = '__get_direction(this.value)'>
+				<option selected disabled>Select Office</option>
+				{% for bec in beacons %}
+					<option
+						latitude = "8.948083"
+						longitude =  "125.541828"
+						slot="hotspot-{{ loop.index }}"
+						value="{{bec['f_x']}} {{bec['f_y']}} {{bec['f_z']}}"
+						>
+						{{bec['f_name']}}
+					</option>
+				{% endfor %}
+			</select>
 			<div class="x-bottom x-container">
 				<div class="x-container">
 					<b class="x-text-white">Floors</b><br>
@@ -225,12 +242,33 @@
 
 		$onload(function(){
 			var geo_options = { enableHighAccuracy: true};
-			navigator.geolocation.watchPosition(successCallback, errorCallback,geo_options);
-			// window.setInterval(function(){getdifcoords(8.947936, 125.541991)},1000)
+			// navigator.geolocation.watchPosition(successCallback, errorCallback,geo_options);
+			window.setInterval(function(){getdifcoords(8.947797, 125.541854)},1000)
 		})
 
 		function get_direction(elem){
 			var beacon_ccords_ = elem.getAttribute("data-position")
+			$send({
+				action : "{{domain}}get_path_to/"+MY_LAT+"/"+MY_LONG+"/"+beacon_ccords_,
+				method: POST,
+				func : function(res){
+					var resp = JSON.parse(res)
+					println("==============")
+					for (var i = 0; i < resp.length; i++) {
+						if("x" in resp[i] && "z" in resp[i] ){
+							if((resp[i]["x"]!= undefined || resp[i]["z"]!= undefined )|| (resp[i]["x"]!= undefined || resp[i]["z"]!= undefined ) ){
+								follow(resp[i]["x"],resp[i]["z"])
+
+							}else{
+								alert("Error in getting Direction")
+							}
+						}
+					}
+				}
+			})
+		}
+
+		function __get_direction(beacon_ccords_){
 			$send({
 				action : "{{domain}}get_path_to/"+MY_LAT+"/"+MY_LONG+"/"+beacon_ccords_,
 				method: POST,
