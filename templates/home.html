@@ -242,8 +242,8 @@
 
 		$onload(function(){
 			var geo_options = { enableHighAccuracy: true};
-			// navigator.geolocation.watchPosition(successCallback, errorCallback,geo_options);
-			window.setInterval(function(){getdifcoords(8.947797, 125.541854)},1000)
+			navigator.geolocation.watchPosition(successCallback, errorCallback,geo_options);
+			// window.setInterval(function(){getdifcoords(8.947797, 125.541854)},1000)
 		})
 
 		function get_direction(elem){
